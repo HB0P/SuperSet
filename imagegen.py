@@ -1,19 +1,23 @@
 import svgutils.transform as st
 import config as conf
 
+def hex_string(x):
+    return hex(x)[2:].rjust(6, '0')
+
 def apply_number(_, num, __):
     return None, num
 
 def apply_color(svg, color, _):
     return st.fromstring(svg.to_str().decode().replace(
         "stroke:#000000",
-        "stroke:#" + colors[color][2]
+        "stroke:#" + hex_string(colors[color])
     )), color
 
 def apply_shading(svg, shading, color):
+    shade_color = int(colors[color] * (1-whiteness[shading]) + 0xffffff * whiteness[shading])
     return st.fromstring(svg.to_str().decode().replace(
         "fill:#808080",
-        "fill:#" + colors[color][shading]
+        "fill:#" + hex_string(shade_color)
     )), None
 
 def apply_shape(_, shape, number):
@@ -25,13 +29,11 @@ def apply_border(svg, border, _):
 
 template_dir = "card-templates/"
 
-# color and shading
-# each array is a color, with elements for empty, shaded, filled
-colors = [
-    ["ffffff", "808080", "000000"],
-    ["ffffff", "ff8080", "ff0000"],
-    ["ffffff", "8080ff", "0000ff"]
-]
+# the 3 colors of cards
+colors = [0xff0000, 0x00a000, 0x0000ff]
+
+# whiteness to be applied for shaded cards
+whiteness = [0, 128/255, 1]
 
 # order in which properties are applied
 # 1st element: function to use for applying
