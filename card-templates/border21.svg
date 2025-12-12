@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="297.5"
+   height="421"
+   viewBox="0 0 297.5 421"
+   id="svg26"
+   sodipodi:docname="border21.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs26">
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview26"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.7458432"
+     inkscape:cx="147.4932"
+     inkscape:cy="215.08232"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1592"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg26" />
+  <path
+     id="rect1"
+     style="fill:none;stroke:#ff00ff;stroke-width:8.35625;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 12.682129,35.85508 V 12.682129 l 22.315131,0 m 9.796886,0 h 44.630262 m 9.796887,0 h 44.630265 m 9.79688,0 h 44.63026 m 9.79689,0 h 44.63026 m 9.79689,0 h 22.31513 V 35.85508 m 0,10.17349 0,46.345901 m 0,10.173489 v 46.3459 m 0,10.17349 0,46.3459 m 0,10.17349 v 46.34591 m 0,10.17349 v 46.3459 m 0,10.17349 v 46.3459 m 0,10.17349 v 23.17295 l -22.31513,0 m -9.79689,0 h -44.63026 m -9.79689,0 -44.63026,0 m -9.79688,0 -44.630265,0 m -9.796887,0 H 44.794146 m -9.796886,0 H 12.682129 v -23.17295 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.34591 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.173489 V 46.02857 m 0,-10.17349 V 12.682129"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z" />
+  <path
+     id="path1"
+     style="fill:none;stroke:#ff00ff;stroke-width:9.33196;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 12.682129,35.85508 V 12.682129 l 22.315131,0 m 9.796886,0 h 44.630262 m 9.796887,0 h 44.630265 m 9.79688,0 h 44.63026 m 9.79689,0 h 44.63026 m 9.79689,0 h 22.31513 V 35.85508 m 0,10.17349 0,46.345901 m 0,10.173489 v 46.3459 m 0,10.17349 0,46.3459 m 0,10.17349 v 46.34591 m 0,10.17349 v 46.3459 m 0,10.17349 v 46.3459 m 0,10.17349 v 23.17295 l -22.31513,0 m -9.79689,0 h -44.63026 m -9.79689,0 -44.63026,0 m -9.79688,0 -44.630265,0 m -9.796887,0 H 44.794146 m -9.796886,0 H 12.682129 v -23.17295 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.34591 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.173489 V 46.02857 m 0,-10.17349 V 12.682129"
+     inkscape:path-effect="#path-effect3"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z"
+     transform="matrix(0.87717897,0,0,0.91408804,18.269629,18.084468)" />
+  <path
+     id="path2"
+     style="fill:none;stroke:#ff00ff;stroke-width:10.5629;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 12.682129,35.85508 V 12.682129 l 22.315131,0 m 9.796886,0 h 44.630262 m 9.796887,0 h 44.630265 m 9.79688,0 h 44.63026 m 9.79689,0 h 44.63026 m 9.79689,0 h 22.31513 V 35.85508 m 0,10.17349 0,46.345901 m 0,10.173489 v 46.3459 m 0,10.17349 0,46.3459 m 0,10.17349 v 46.34591 m 0,10.17349 v 46.3459 m 0,10.17349 v 46.3459 m 0,10.17349 v 23.17295 l -22.31513,0 m -9.79689,0 h -44.63026 m -9.79689,0 -44.63026,0 m -9.79688,0 -44.630265,0 m -9.796887,0 H 44.794146 m -9.796886,0 H 12.682129 v -23.17295 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.34591 m 0,-10.17349 v -46.3459 m 0,-10.17349 v -46.3459 m 0,-10.173489 V 46.02857 m 0,-10.17349 V 12.682129"
+     inkscape:path-effect="#path-effect4"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z"
+     transform="matrix(0.75498426,0,0,0.82891745,36.446092,36.012877)" />
+</svg>

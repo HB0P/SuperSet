@@ -33,7 +33,7 @@
      inkscape:current-layer="svg26" />
   <path
      id="path1"
-     style="fill:#808080;stroke:#000000;stroke-width:8.504;fill-opacity:1;stroke-opacity:1"
+     style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:8.504;stroke-opacity:1"
      inkscape:transform-center-x="-4.8687075"
      inkscape:transform-center-y="9.1009225"
      transform="translate(45.25034,167.25442)"
@@ -41,7 +41,7 @@
      sodipodi:nodetypes="cccc" />
   <path
      id="path1-9"
-     style="fill:#808080;stroke:#000000;stroke-width:8.504;fill-opacity:1;stroke-opacity:1"
+     style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:8.504;stroke-opacity:1"
      inkscape:transform-center-x="4.868707"
      inkscape:transform-center-y="-9.1009225"
      d="m 63.77904,172.663 84.97101,37.83701 -84.97101,37.837 z"

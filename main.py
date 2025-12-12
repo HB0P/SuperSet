@@ -2,6 +2,7 @@ import tkinter as tk
 import tksvg
 from tksvg import SvgImage
 
+import config
 import imagegen
 import engine
 import utils
@@ -11,10 +12,29 @@ import config as conf
 deck = utils.create_deck() # the remaining deck
 cards = [deck.pop() for _ in range(conf.num_cards)] # the face-up cards
 selected_cards = [] # indexes of which cards are selected
+twin_sets = [] # all twin sets in the currently face up cards
 
 ### gui state
 imgs: list[SvgImage] = [None] * conf.num_cards
 buttons: list[tk.Button] = [None] * conf.num_cards
+
+### game functions
+def is_twin_set_selected():
+    for twin_set in twin_sets:
+        if len(selected_cards) != len(twin_set):
+            continue
+        valid = True
+        i = 0
+        for card_index in range(config.num_cards):
+            if not card_index in selected_cards:
+                continue
+            if (cards[card_index] != twin_set[i]).any():
+                valid = False
+                break
+            i += 1
+        if valid:
+            return True
+    return False
 
 ### gui functions
 def refresh_button(i, refresh_image=False):
@@ -28,7 +48,11 @@ def refresh_button(i, refresh_image=False):
         buttons[i].configure(activebackground="white")
     buttons[i]["background"] = "lightgray" if i in selected_cards else "white"
 
-def refresh_card_count():
+def refresh_cards():
+    global twin_sets
+    twin_sets = engine.find_twin_sets([card for card in cards if card is not None])
+    if len(twin_sets) == 0:
+        game_over()
     card_count_label.configure(text=str(len(deck)))
 
 def click_card(i):
@@ -46,18 +70,24 @@ def submit():
         submit_button["background"] = "chartreuse4"
     root.after(150, reset_color)
 
-    trial_set = [cards[i] for i in selected_cards]
-    valid = engine.is_twin_set(trial_set)
+    valid = is_twin_set_selected()
     if valid:
         for i in range(conf.num_cards):
             if i in selected_cards:
                 cards[i] = None if len(deck) == 0 else deck.pop()
-        refresh_card_count()
+        refresh_cards()
 
     prev_selected_cards = [i for i in selected_cards]
     selected_cards.clear()
     for i in prev_selected_cards:
         refresh_button(i, valid)
+
+def game_over():
+    submit_button.configure(
+        text="GAME OVER",
+        state="disabled",
+        bg="red"
+    )
 
 ### create gui
 root = tk.Tk()
@@ -98,6 +128,7 @@ submit_button = (tk.Button(
     text="SUBMIT",
     bg="chartreuse4",
     activebackground="chartreuse3",
+    disabledforeground="white",
     bd=0,
     relief="sunken",
     height=2,
@@ -120,6 +151,6 @@ card_count_label.pack(
     side="right",
     padx=(10, 0)
 )
-refresh_card_count()
+refresh_cards()
 
 root.mainloop()

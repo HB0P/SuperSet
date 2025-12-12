@@ -5,9 +5,9 @@ import config as conf
 
 def inclusion(cards, n):
     consider=[]
-    for x in range(math.comb(conf.dim + 2, n)):
+    for x in range(math.comb(len(cards), n)):
         consider.append([])
-    choose = [True]*n + [False]*(conf.dim + 2 - n)
+    choose = [True]*n + [False]*(len(cards) - n)
     choose = list(multiset_permutations(choose))
     choose.reverse()
     for x in range(len(choose)):
@@ -35,22 +35,9 @@ def subset(n, signs, consider):
 
 def find_twin_sets(cards):
     twin_sets = []
-    for n in range(1, conf.dim + 3):
+    for n in range(1, len(cards) + 1):
         consider = np.array(inclusion(cards, n))
         for x in range((-n) % 3, math.floor(n / 2) + 1, 3):
             signs = np.array(sign(n, x))
             twin_sets.extend(subset(n, signs, consider))
     return twin_sets
-
-ts = find_twin_sets([
-    np.array([1, 0, 2, 2]),
-    np.array([2, 1, 2, 1]),
-    np.array([2, 0, 1, 1]),
-    np.array([1, 1, 2, 1]),
-    np.array([2, 0, 1, 2]),
-    np.array([2, 0, 2, 1])
-])
-
-for t in ts:
-    print(t)
-print(len(ts))

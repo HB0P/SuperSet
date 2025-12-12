@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="297.5"
+   height="421"
+   viewBox="0 0 297.5 421"
+   id="svg26"
+   sodipodi:docname="border22.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs26">
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="-0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="-0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="0.6"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+    <inkscape:path-effect
+       effect="dashed_stroke"
+       message=""
+       id="path-effect1-3"
+       is_visible="true"
+       lpeversion="1"
+       numberdashes="6"
+       holefactor="-0.64"
+       splitsegments="true"
+       halfextreme="true"
+       unifysegment="true" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview26"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.7458432"
+     inkscape:cx="118.28095"
+     inkscape:cy="223.67415"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1592"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg26" />
+  <path
+     id="rect1-2"
+     style="fill:none;stroke:#ff00ff;stroke-width:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 12.682129,17.768874 v -5.086745 h 4.898443 m 44.630262,0 9.796887,0 m 44.630259,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 4.89844 v 5.086745 m 0,46.345901 v 10.173491 m 0,46.345904 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 5.08675 h -4.89844 m -44.63026,0 -9.79689,0 m -44.63026,0 h -9.79689 m -44.63026,0 h -9.79689 m -44.630259,0 h -9.796887 m -44.630262,0 h -4.898443 v -5.08675 m 0,-46.3459 v -10.17349 m 0,-46.3459 0,-10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.345904 V 64.114775 m 0,-46.345901 v -5.086745"
+     inkscape:path-effect="#path-effect1-3"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z" />
+  <path
+     id="path1"
+     style="fill:none;stroke:#ff00ff;stroke-width:11.2343;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 12.682129,17.768874 v -5.086745 h 4.898443 m 44.630262,0 9.796887,0 m 44.630259,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 4.89844 v 5.086745 m 0,46.345901 v 10.173491 m 0,46.345904 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 5.08675 h -4.89844 m -44.63026,0 -9.79689,0 m -44.63026,0 h -9.79689 m -44.63026,0 h -9.79689 m -44.630259,0 h -9.796887 m -44.630262,0 h -4.898443 v -5.08675 m 0,-46.3459 v -10.17349 m 0,-46.3459 0,-10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.345904 V 64.114775 m 0,-46.345901 v -5.086745"
+     inkscape:path-effect="#path-effect3"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z"
+     transform="matrix(0.86939334,0,0,0.91136357,19.427741,18.657969)" />
+  <path
+     id="path2"
+     style="fill:none;stroke:#ff00ff;stroke-width:12.7254;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 12.682129,17.768874 v -5.086745 h 4.898443 m 44.630262,0 9.796887,0 m 44.630259,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 9.79689 m 44.63026,0 h 4.89844 v 5.086745 m 0,46.345901 v 10.173491 m 0,46.345904 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 10.17349 m 0,46.3459 v 5.08675 h -4.89844 m -44.63026,0 -9.79689,0 m -44.63026,0 h -9.79689 m -44.63026,0 h -9.79689 m -44.630259,0 h -9.796887 m -44.630262,0 h -4.898443 v -5.08675 m 0,-46.3459 v -10.17349 m 0,-46.3459 0,-10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.3459 v -10.17349 m 0,-46.345904 V 64.114775 m 0,-46.345901 v -5.086745"
+     inkscape:path-effect="#path-effect4"
+     inkscape:original-d="M 12.682129,12.682129 H 284.81787 V 408.31787 H 12.682129 Z"
+     transform="matrix(0.74917383,0,0,0.82427967,37.310393,36.98913)" />
+</svg>
