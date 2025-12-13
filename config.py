@@ -1,3 +1,4 @@
-dim = 8
+dim = 4
 num_cards = dim + 2
-grid_size = ((dim + 3) // 2, 2) # num cols, num rows
+num_cards = 12
+grid_size = ((num_cards + 1) // 2, 2) # num cols, num rows

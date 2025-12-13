@@ -54,7 +54,6 @@ def apply_shading(svg, shading, color):
         shading = 2
     shade_color = int(colors[color] * (1-whiteness[shading]) + 0xffffff * whiteness[shading])
     fill_opacity = 0 if shade_color == 0xffffff else 1
-    print(fill_opacity)
     return st.fromstring(svg.to_str().decode().replace(
         "fill:#808080;fill-opacity:1",
         "fill:#" + hex_string(shade_color) + ";fill-opacity:" + str(fill_opacity)

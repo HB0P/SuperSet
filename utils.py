@@ -1,6 +1,8 @@
+from datetime import timedelta
 import config as conf
-import random#
+import random
 import numpy as np
+import json
 
 def get_all_cards():
     deck = []
@@ -13,3 +15,10 @@ def create_deck():
     deck = get_all_cards()
     random.shuffle(deck)
     return deck
+
+def save_best_time(time: timedelta):
+    with open("data/best_times.json", "r") as f:
+        data = json.load(f)
+    data[str(conf.dim) + "-" + str(conf.num_cards)] = time.seconds
+    with open("data/best_times.json", "w") as f:
+        json.dump(data, f)

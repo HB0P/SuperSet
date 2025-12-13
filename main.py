@@ -1,7 +1,7 @@
 import tkinter as tk
 import tksvg
 from tksvg import SvgImage
-
+from datetime import datetime as dt
 import config
 import imagegen
 import engine
@@ -13,6 +13,8 @@ deck = utils.create_deck() # the remaining deck
 cards = [deck.pop() for _ in range(conf.num_cards)] # the face-up cards
 selected_cards = [] # indexes of which cards are selected
 twin_sets = [] # all twin sets in the currently face up cards
+start_time = dt.now()
+game_active = True
 
 ### gui state
 imgs: list[SvgImage] = [None] * conf.num_cards
@@ -51,9 +53,9 @@ def refresh_button(i, refresh_image=False):
 def refresh_cards():
     global twin_sets
     twin_sets = engine.find_twin_sets([card for card in cards if card is not None])
-    if len(twin_sets) == 0:
+    if len(twin_sets) == 1:
         game_over()
-    card_count_label.configure(text=str(len(deck)))
+    card_count_label.configure(text=str(len(deck)) + " remaining")
 
 def click_card(i):
     if cards[i] is None:
@@ -82,12 +84,21 @@ def submit():
     for i in prev_selected_cards:
         refresh_button(i, valid)
 
+def update_timer():
+    elapsed_time = dt.now() - start_time
+    timer_label.configure(text=str(elapsed_time)[2:-7])
+    if game_active:
+        root.after(100, update_timer)
+
 def game_over():
+    global game_active
+    game_active = False
     submit_button.configure(
         text="GAME OVER",
         state="disabled",
         bg="red"
     )
+    utils.save_best_time(dt.now() - start_time)
 
 ### create gui
 root = tk.Tk()
@@ -95,10 +106,18 @@ root.configure()
 root.title("Superset")
 root.resizable(False, False)
 
+# create frames
 cards_frame = tk.Frame(root, bg="white")
 cards_frame.pack(side="top")
 controls_frame = tk.Frame(root)
-controls_frame.pack(side="bottom", fill="x", expand=True, padx=10, pady=10)
+controls_frame.pack(
+    side="bottom",
+    fill="x",
+    expand=True,
+    padx=10,
+    pady=10
+)
+controls_frame.grid_columnconfigure(0, weight=1)
 
 # create buttons
 for i in range(conf.num_cards):
@@ -135,22 +154,35 @@ submit_button = (tk.Button(
     font=("helvetica", 24),
     command=submit
 ))
-submit_button.pack(
-    side="left",
-    fill="x",
-    expand=True,
+submit_button.grid(
+    row=0,
+    column=0,
+    sticky="EW",
+    columnspan=2
 )
 
 # card count
 card_count_label = tk.Label(
     controls_frame,
-    width=3,
     font=("helvetica", 24)
 )
-card_count_label.pack(
-    side="right",
-    padx=(10, 0)
+card_count_label.grid(
+    row=1,
+    column=0,
+    sticky="W"
 )
 refresh_cards()
+
+# timer
+timer_label = tk.Label(
+    controls_frame,
+    font=("helvetica", 24)
+)
+timer_label.grid(
+    row=1,
+    column=1,
+    sticky="E"
+)
+update_timer()
 
 root.mainloop()

@@ -35,7 +35,7 @@ def subset(n, signs, consider):
 
 def find_twin_sets(cards):
     twin_sets = []
-    for n in range(1, len(cards) + 1):
+    for n in range(len(cards) + 1):
         consider = np.array(inclusion(cards, n))
         for x in range((-n) % 3, math.floor(n / 2) + 1, 3):
             signs = np.array(sign(n, x))
