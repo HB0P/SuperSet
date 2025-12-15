@@ -7,18 +7,22 @@ import imagegen
 import engine
 import utils
 import config as conf
+from functools import partial
 
 ### game state
 deck = utils.create_deck() # the remaining deck
 cards = [deck.pop() for _ in range(conf.num_cards)] # the face-up cards
 selected_cards = [] # indexes of which cards are selected
 twin_sets = [] # all twin sets in the currently face up cards
+scores = [0] * conf.num_players
 start_time = dt.now()
 game_active = True
 
 ### gui state
 imgs: list[SvgImage] = [None] * conf.num_cards
 buttons: list[tk.Button] = [None] * conf.num_cards
+submit_buttons: list[tk.Button] = [None] * conf.num_players
+score_labels: list[tk.Label] = [None] * conf.num_players
 
 ### game functions
 def is_twin_set_selected():
@@ -53,6 +57,8 @@ def refresh_button(i, refresh_image=False):
 def refresh_cards():
     global twin_sets
     twin_sets = engine.find_twin_sets([card for card in cards if card is not None])
+    for i in range(conf.num_players):
+        score_labels[i].configure(text=str(scores[i]))
     if len(twin_sets) == 1:
         game_over()
     card_count_label.configure(text=str(len(deck)) + " remaining")
@@ -66,17 +72,20 @@ def click_card(i):
         selected_cards.append(i)
     refresh_button(i)
 
-def submit():
-    submit_button["background"] = "chartreuse3"
-    def reset_color():
-        submit_button["background"] = "chartreuse4"
-    root.after(150, reset_color)
+def submit(player):
+    print("submit", player)
+    submit_buttons[player]["background"] = "chartreuse3"
+    def reset_color(plr):
+        if game_active:
+            submit_buttons[plr]["background"] = "chartreuse4"
+    root.after(150, reset_color, player)
 
     valid = is_twin_set_selected()
     if valid:
         for i in range(conf.num_cards):
             if i in selected_cards:
                 cards[i] = None if len(deck) == 0 else deck.pop()
+        scores[player] += len(selected_cards)
         refresh_cards()
 
     prev_selected_cards = [i for i in selected_cards]
@@ -93,12 +102,14 @@ def update_timer():
 def game_over():
     global game_active
     game_active = False
-    submit_button.configure(
-        text="GAME OVER",
-        state="disabled",
-        bg="red"
-    )
-    utils.save_best_time(dt.now() - start_time)
+    for btn in submit_buttons:
+        btn.configure(
+            text="GAME OVER",
+            state="disabled",
+            bg="red"
+        )
+    if conf.num_players == 1:
+        utils.save_best_time(dt.now() - start_time)
 
 ### create gui
 root = tk.Tk()
@@ -114,12 +125,13 @@ controls_frame.pack(
     side="bottom",
     fill="x",
     expand=True,
-    padx=10,
-    pady=10
+    padx=5,
+    pady=5
 )
-controls_frame.grid_columnconfigure(0, weight=1)
+for i in range(max(2, conf.num_players)):
+    controls_frame.grid_columnconfigure(i, weight=1)
 
-# create buttons
+# card buttons
 for i in range(conf.num_cards):
     button = tk.Button(
         cards_frame,
@@ -141,48 +153,71 @@ for x in range(conf.grid_size[0]):
             break
         buttons[i].grid(column=x, row=y)
 
-# submit button
-submit_button = (tk.Button(
-    controls_frame,
-    text="SUBMIT",
-    bg="chartreuse4",
-    activebackground="chartreuse3",
-    disabledforeground="white",
-    bd=0,
-    relief="sunken",
-    height=2,
-    font=("helvetica", 24),
-    command=submit
-))
-submit_button.grid(
-    row=0,
-    column=0,
-    sticky="EW",
-    columnspan=2
-)
+# submit buttons
+for i in range(conf.num_players):
+    submit_buttons[i] = tk.Button(
+        controls_frame,
+        text = "SUBMIT" if conf.num_players == 1 else "Player " + str(i+1) + "\nSUBMIT",
+        bg="chartreuse4",
+        activebackground="chartreuse3",
+        disabledforeground="white",
+        bd=0,
+        relief="sunken",
+        height=2,
+        font=("helvetica", 24),
+        command = partial(submit, i)
+    )
+    submit_buttons[i].grid(
+        row=0,
+        column=i,
+        sticky="EW",
+        padx=5,
+        pady=5,
+        columnspan = 2 if conf.num_players == 1 else 1
+    )
+
+# scores
+for i in range(conf.num_players):
+    score_labels[i] = tk.Label(
+        controls_frame,
+        font=("helvetica", 24)
+    )
+    if conf.num_players != 1:
+        score_labels[i].grid(
+            row=1,
+            column=i
+        )
 
 # card count
 card_count_label = tk.Label(
     controls_frame,
     font=("helvetica", 24)
 )
-card_count_label.grid(
-    row=1,
-    column=0,
-    sticky="W"
-)
+if conf.num_players == 1:
+    card_count_label.grid(
+        row=1,
+        column=0,
+        sticky="W"
+    )
+else:
+    card_count_label.grid(
+        row=2,
+        column=0,
+        columnspan=conf.num_players
+    )
 refresh_cards()
 
 # timer
-timer_label = tk.Label(
-    controls_frame,
-    font=("helvetica", 24)
-)
-timer_label.grid(
-    row=1,
-    column=1,
-    sticky="E"
-)
-update_timer()
+if conf.num_players == 1:
+    timer_label = tk.Label(
+        controls_frame,
+        font=("helvetica", 24)
+    )
+    timer_label.grid(
+        row=1,
+        column=1,
+        sticky="E"
+    )
+    update_timer()
 
 root.mainloop()
