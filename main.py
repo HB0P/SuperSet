@@ -8,7 +8,7 @@ import engine
 import utils
 import config as conf
 from functools import partial
-import vlc
+# import vlc
 
 ### game state
 deck = utils.create_deck() # the remaining deck
@@ -121,18 +121,18 @@ def game_over():
     if conf.num_players == 1:
         utils.save_best_time(dt.now() - start_time)
 
-def on_card_hover_start(i):
-    global music_player
-    if conf.dim > 8 and conf.dim % 2 == 0:
-        music = cards[i][-1]
-        music_player = vlc.MediaPlayer("file:///music/music" + str(music) + ".mp3")
-        music_player.play()
+#def on_card_hover_start(i):
+#    global music_player
+#    if conf.dim > 8 and conf.dim % 2 == 0:
+#        music = cards[i][-1]
+#        music_player = vlc.MediaPlayer("file:///music/music" + str(music) + ".mp3")
+#        music_player.play()
 
-def on_card_hover_end():
-    global music_player
-    if music_player is not None:
-        music_player.stop()
-        music_player = None
+#def on_card_hover_end():
+#    global music_player
+#    if music_player is not None:
+#        music_player.stop()
+#        music_player = None
 
 ### create gui
 root = tk.Tk()
@@ -162,8 +162,8 @@ for i in range(conf.num_cards):
         relief="sunken",
         command=lambda n=i: click_card(n)
     )
-    button.bind("<Enter>", lambda _, n=i: on_card_hover_start(n))
-    button.bind("<Leave>", lambda _: on_card_hover_end())
+    #button.bind("<Enter>", lambda _, n=i: on_card_hover_start(n))
+    #button.bind("<Leave>", lambda _: on_card_hover_end())
     buttons[i] = button
 
 # give images to buttons
