@@ -1,5 +1,7 @@
 import svgutils.transform as st
-import config as conf
+import utils
+
+cache = {}
 
 def hex_string(x):
     return hex(x)[2:].rjust(6, '0')
@@ -85,12 +87,38 @@ application_order = [
 ]
 
 # generate svg for a card
-def gen_svg(card):
+def gen_svg_frame(card):
+    card_hash = utils.hash_card(card)
+    if card_hash in cache:
+        return cache[card_hash]
+
     svg, data = st.fromfile(template_dir + "blank.svg"), None
     if card is None:
+        cache[card_hash] = svg
         return svg
 
     for apply in application_order:
-        value = card[apply[1]] if apply[1] < conf.dim else None
+        value = card[apply[1]] if apply[1] < len(card) else None
         svg, data = apply[0](svg, value, data)
+
+    cache[card_hash] = svg
     return svg
+
+def gen_svg(card, frame):
+    if len(card) <= 8:
+        return gen_svg_frame(card)
+
+    if len(card) % 2 == 0:
+        rate = card[-2]
+        first = card[: len(card) // 2 - 1]
+        second = card[len(card) // 2 - 1 : -2]
+    else:
+        rate = card[-1]
+        first = card[: len(card) // 2]
+        second = card[len(card) // 2 : -1]
+
+    if (frame & (1 << rate)) == 0:
+        return gen_svg_frame(first)
+    else:
+        return gen_svg_frame(second)
+

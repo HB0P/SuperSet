@@ -8,6 +8,7 @@ import engine
 import utils
 import config as conf
 from functools import partial
+import vlc
 
 ### game state
 deck = utils.create_deck() # the remaining deck
@@ -24,8 +25,13 @@ buttons: list[tk.Button] = [None] * conf.num_cards
 submit_buttons: list[tk.Button] = [None] * conf.num_players
 score_labels: list[tk.Label] = [None] * conf.num_players
 
+music_player = None
+
 ### game functions
 def is_twin_set_selected():
+    if not conf.do_find_twin_sets:
+        return True
+
     for twin_set in twin_sets:
         if len(selected_cards) != len(twin_set):
             continue
@@ -43,12 +49,12 @@ def is_twin_set_selected():
     return False
 
 ### gui functions
-def refresh_button(i, refresh_image=False):
-    if refresh_image:
-        svg = imagegen.gen_svg(cards[i]).to_str().decode()
-        img = tksvg.SvgImage(data=svg).subsample(2)
-        imgs[i] = img
-        buttons[i]["image"] = imgs[i]
+def refresh_button(i):
+    frame = int((dt.now() - start_time).total_seconds() * 2)
+    svg = imagegen.gen_svg(cards[i], frame).to_str().decode()
+    img = tksvg.SvgImage(data=svg).subsample(2)
+    imgs[i] = img
+    buttons[i]["image"] = imgs[i]
 
     if cards[i] is None:
         buttons[i].configure(activebackground="white")
@@ -56,12 +62,14 @@ def refresh_button(i, refresh_image=False):
 
 def refresh_cards():
     global twin_sets
-    twin_sets = engine.find_twin_sets([card for card in cards if card is not None])
     for i in range(conf.num_players):
         score_labels[i].configure(text=str(scores[i]))
-    if len(twin_sets) == 1:
-        game_over()
     card_count_label.configure(text=str(len(deck)) + " remaining")
+
+    if conf.do_find_twin_sets:
+        twin_sets = engine.find_twin_sets([card for card in cards if card is not None])
+        if len(twin_sets) == 1:
+            game_over()
 
 def click_card(i):
     if cards[i] is None:
@@ -91,13 +99,15 @@ def submit(player):
     prev_selected_cards = [i for i in selected_cards]
     selected_cards.clear()
     for i in prev_selected_cards:
-        refresh_button(i, valid)
+        refresh_button(i)
 
 def update_timer():
     elapsed_time = dt.now() - start_time
     timer_label.configure(text=str(elapsed_time)[2:-7])
+    for i in range(len(cards)):
+        refresh_button(i)
     if game_active:
-        root.after(100, update_timer)
+        root.after(10, update_timer)
 
 def game_over():
     global game_active
@@ -110,6 +120,19 @@ def game_over():
         )
     if conf.num_players == 1:
         utils.save_best_time(dt.now() - start_time)
+
+def on_card_hover_start(i):
+    global music_player
+    if conf.dim > 8 and conf.dim % 2 == 0:
+        music = cards[i][-1]
+        music_player = vlc.MediaPlayer("file:///music/music" + str(music) + ".mp3")
+        music_player.play()
+
+def on_card_hover_end():
+    global music_player
+    if music_player is not None:
+        music_player.stop()
+        music_player = None
 
 ### create gui
 root = tk.Tk()
@@ -139,11 +162,13 @@ for i in range(conf.num_cards):
         relief="sunken",
         command=lambda n=i: click_card(n)
     )
+    button.bind("<Enter>", lambda _, n=i: on_card_hover_start(n))
+    button.bind("<Leave>", lambda _: on_card_hover_end())
     buttons[i] = button
 
 # give images to buttons
 for i in range(conf.num_cards):
-    refresh_button(i, True)
+    refresh_button(i)
 
 # place buttons on grid
 for x in range(conf.grid_size[0]):

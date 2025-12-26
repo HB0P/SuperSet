@@ -12,8 +12,10 @@ def get_all_cards():
     return deck
 
 def create_deck():
-    deck = get_all_cards()
-    random.shuffle(deck)
+    deck = []
+    for i in random.sample(range(3 ** conf.dim), conf.deck_size):
+        card = [int(i // (3 ** j)) % 3 for j in range(conf.dim)]
+        deck.append(np.array(card))
     return deck
 
 def save_best_time(time: timedelta):
@@ -22,3 +24,9 @@ def save_best_time(time: timedelta):
     data[str(conf.dim) + "-" + str(conf.num_cards)] = time.seconds
     with open("data/best_times.json", "w") as f:
         json.dump(data, f)
+
+def hash_card(card):
+    total = 0
+    for i in range(len(card)):
+        total += card[i] * (3 ** i)
+    return total

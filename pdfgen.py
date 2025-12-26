@@ -17,7 +17,7 @@ pages = [cards[i:i+cards_per_page] for i in range(0, len(cards), cards_per_page)
 
 merger = PdfMerger()
 for i in range(len(pages)):
-    svgs = [sc.Element(imagegen.gen_svg(card).getroot().root) for card in pages[i]]
+    svgs = [sc.Element(imagegen.gen_svg_frame(card).getroot().root) for card in pages[i]]
     grid_fig = sc.Figure(297.5 * 3, 421 * 3, *svgs)
     grid_fig.tile(page_size, page_size)
     fig = sc.Figure(
