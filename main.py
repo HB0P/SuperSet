@@ -50,7 +50,7 @@ def is_twin_set_selected():
 
 ### gui functions
 def refresh_button(i):
-    frame = int((dt.now() - start_time).total_seconds() * 2)
+    frame = int((dt.now() - start_time).total_seconds())
     svg = imagegen.gen_svg(cards[i], frame).to_str().decode()
     img = tksvg.SvgImage(data=svg).subsample(2)
     imgs[i] = img

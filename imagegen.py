@@ -1,7 +1,6 @@
 import svgutils.transform as st
-import utils
+import config as conf
 
-cache = {}
 
 def hex_string(x):
     return hex(x)[2:].rjust(6, '0')
@@ -36,6 +35,8 @@ def apply_border_style(svg, border_style, border_number):
     return svg, None
 
 def apply_color(svg, color, _):
+    if color is None:
+        color = -1
     return st.fromstring(svg.to_str().decode().replace(
         "stroke:#000000",
         "stroke:#" + hex_string(colors[color])
@@ -64,7 +65,7 @@ def apply_shading(svg, shading, color):
 template_dir = "card-templates/"
 
 # the 3 colors of cards and borders
-colors = [0xff0000, 0x00a000, 0x0000ff]
+colors = [0xff0000, 0x00a000, 0x0000ff, 0x000000] # the 4th element is the default color
 border_colors = [0x00e0ff, 0xff00ff, 0xffa000]
 background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 
@@ -86,39 +87,28 @@ application_order = [
     (apply_shading, 3),
 ]
 
-# generate svg for a card
-def gen_svg_frame(card):
-    card_hash = utils.hash_card(card)
-    if card_hash in cache:
-        return cache[card_hash]
-
+# generate svg given values for each dimension
+def gen_svg_frame(values):
     svg, data = st.fromfile(template_dir + "blank.svg"), None
-    if card is None:
-        cache[card_hash] = svg
-        return svg
 
     for apply in application_order:
-        value = card[apply[1]] if apply[1] < len(card) else None
+        value = values[apply[1]] if apply[1] < len(values) else None
         svg, data = apply[0](svg, value, data)
 
-    cache[card_hash] = svg
     return svg
 
+# generate svg for a card at a given frame in time
 def gen_svg(card, frame):
-    if len(card) <= 8:
-        return gen_svg_frame(card)
+    if card is None:
+        return st.fromfile(template_dir + "blank.svg")
 
-    if len(card) % 2 == 0:
-        rate = card[-2]
-        first = card[: len(card) // 2 - 1]
-        second = card[len(card) // 2 - 1 : -2]
-    else:
-        rate = card[-1]
-        first = card[: len(card) // 2]
-        second = card[len(card) // 2 : -1]
+    values = [None] * len(conf.enabled_dimensions)
+    j = 0
+    for i in range(len(values)):
+        n = conf.enabled_dimensions[i]
+        if n == 0:
+            continue
+        values[i] = card[j + (frame % n)]
+        j += n
 
-    if (frame & (1 << rate)) == 0:
-        return gen_svg_frame(first)
-    else:
-        return gen_svg_frame(second)
-
+    return gen_svg_frame(values)

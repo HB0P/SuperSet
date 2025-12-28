@@ -24,9 +24,3 @@ def save_best_time(time: timedelta):
     data[str(conf.dim) + "-" + str(conf.num_cards)] = time.seconds
     with open("data/best_times.json", "w") as f:
         json.dump(data, f)
-
-def hash_card(card):
-    total = 0
-    for i in range(len(card)):
-        total += card[i] * (3 ** i)
-    return total
