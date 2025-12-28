@@ -1,66 +1,8 @@
 import svgutils.transform as st
 import config as conf
 
-
 def hex_string(x):
     return hex(x)[2:].rjust(6, '0')
-
-def apply_background_color(svg, background_color, __):
-    if background_color is not None:
-        svg.append(st.fromstring(st.fromfile(template_dir + "background.svg").to_str().decode().replace(
-            "fill:#ffffff",
-            "fill:#" + hex_string(background_colors[background_color])
-        )))
-    return svg, None
-
-def apply_number(svg, number, __):
-    if number is None:
-        number = 0
-    return svg, number
-
-def apply_shape(svg, shape, number):
-    if shape is None:
-        shape = 2
-    svg.append(st.fromfile(template_dir + "base" + str(number) + str(shape) + ".svg"))
-    return svg, None
-
-def apply_border_number(svg, border_number, _):
-    if border_number is None:
-        border_number = 0
-    return svg, border_number
-
-def apply_border_style(svg, border_style, border_number):
-    if border_style is not None:
-        svg.append(st.fromfile(template_dir + "border" + str(border_number) + str(border_style) + ".svg"))
-    return svg, None
-
-def apply_color(svg, color, _):
-    if color is None:
-        color = -1
-    return st.fromstring(svg.to_str().decode().replace(
-        "stroke:#000000",
-        "stroke:#" + hex_string(colors[color])
-    )), color
-
-def apply_border_color(svg, border_color, color):
-    if border_color is None:
-        hex_code = colors[color]
-    else:
-        hex_code = border_colors[border_color]
-    return st.fromstring(svg.to_str().decode().replace(
-        "stroke:#ff00ff",
-        "stroke:#" + hex_string(hex_code)
-    )), color
-
-def apply_shading(svg, shading, color):
-    if shading is None:
-        shading = 2
-    shade_color = int(colors[color] * (1-whiteness[shading]) + 0xffffff * whiteness[shading])
-    fill_opacity = 0 if shade_color == 0xffffff else 1
-    return st.fromstring(svg.to_str().decode().replace(
-        "fill:#808080;fill-opacity:1",
-        "fill:#" + hex_string(shade_color) + ";fill-opacity:" + str(fill_opacity)
-    )), None
 
 template_dir = "card-templates/"
 
@@ -72,28 +14,74 @@ background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 # whiteness to be applied for shaded cards
 whiteness = [1, 128/255, 0]
 
-# order in which properties are applied
-# 1st element: function to use for applying
-# 2nd element: index which the property is at in the card vector
-# 3rd element: default value if property is not used
-application_order = [
-    (apply_background_color, 7),
-    (apply_number, 2),
-    (apply_shape, 1),
-    (apply_border_number, 6),
-    (apply_border_style, 4),
-    (apply_color, 0),
-    (apply_border_color, 5),
-    (apply_shading, 3),
-]
-
-# generate svg given values for each dimension
+# generate svg for a given set of properties
 def gen_svg_frame(values):
-    svg, data = st.fromfile(template_dir + "blank.svg"), None
+    svg = st.fromfile(template_dir + "blank.svg")
 
-    for apply in application_order:
-        value = values[apply[1]] if apply[1] < len(values) else None
-        svg, data = apply[0](svg, value, data)
+    color = values[0]
+    shape = values[1]
+    number = values[2]
+    shading = values[3]
+    border_style = values[4]
+    border_color = values[5]
+    border_number = values[6]
+    background_color = values[7]
+
+    # background color
+    if background_color is not None:
+        svg.append(st.fromstring(st.fromfile(template_dir + "background.svg").to_str().decode().replace(
+            "fill:#ffffff",
+            "fill:#" + hex_string(background_colors[background_color])
+        )))
+
+    # central shape properties
+    if color is not None or shape is not None or number is not None or shading is not None:
+        if number is None:
+            number = 0
+        if shape is None:
+            shape = 2
+        if color is None:
+            color = -1
+        if shading is None:
+            shading = 2
+        shade_color = int(colors[color] * (1 - whiteness[shading]) + 0xffffff * whiteness[shading])
+        fill_opacity = 0 if shade_color == 0xffffff else 1
+        svg.append(
+            st.fromstring(
+                st.fromfile(
+                    template_dir + "base" + str(number) + str(shape) + ".svg"
+                ).to_str().decode().replace(
+                    "stroke:#000000",
+                    "stroke:#" + hex_string(colors[color])
+                ).replace(
+                    "fill:#808080;fill-opacity:1",
+                    "fill:#" + hex_string(shade_color) + ";fill-opacity:" + str(fill_opacity)
+                )
+            )
+        )
+
+    # border properties
+    if border_style is not None or border_color is not None or border_number is not None:
+        if border_number is None:
+            border_number = 0
+        if border_style is None:
+            border_style = 0
+        if color is None:
+            color = -1
+        if border_color is None:
+            hex_code = colors[color]
+        else:
+            hex_code = border_colors[border_color]
+        svg.append(
+            st.fromstring(
+                st.fromfile(
+                    template_dir + "border" + str(border_number) + str(border_style) + ".svg"
+                ).to_str().decode().replace(
+                    "stroke:#ff00ff",
+                    "stroke:#" + hex_string(hex_code)
+                )
+            )
+        )
 
     return svg
 

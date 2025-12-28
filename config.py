@@ -3,14 +3,14 @@
 # 1 is enabled normally
 # >1 cycles between dimensions
 enabled_dimensions = [
-    1, # shape color
-    1, # shape
-    1, # number of shapes
-    1, # shading
-    0, # border style
-    0, # border color
-    0, # number of borders
-    0, # background shading
+    0, # shape color
+    0, # shape
+    0, # number of shapes
+    0, # shading
+    1, # border style
+    1, # border color
+    1, # number of borders
+    1, # background shading
 ]
 
 # dimension of the game
