@@ -1,8 +1,8 @@
-import svgutils.compose as sc
+import io
+
+import resvg_py
 import svgutils.transform as st
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
-from PyPDF2 import PdfMerger
+from PIL import Image
 
 import imagegen
 import utils
@@ -15,20 +15,25 @@ cards_per_page = page_size ** 2
 cards = utils.get_all_cards()
 pages = [cards[i:i+cards_per_page] for i in range(0, len(cards), cards_per_page)]
 
-merger = PdfMerger()
-for i in range(len(pages)):
-    # todo: use of gen_svg_frame likely broken due to changes in argument format
-    svgs = [sc.Element(imagegen.gen_svg_frame(card).getroot().root) for card in pages[i]]
-    grid_fig = sc.Figure(297.5 * 3, 421 * 3, *svgs)
-    grid_fig.tile(page_size, page_size)
-    fig = sc.Figure(
-        297.5 * 3, 421 * 3,
-        sc.Element(st.fromstring(grid_fig.tostr().decode()).getroot().root),
-        sc.SVG("pdf-background.svg")
-    )
-    fig.save("temp/page" + str(i) + ".svg")
-    renderPDF.drawToFile(svg2rlg("temp/page" + str(i) + ".svg"), "temp/page" + str(i) + ".pdf")
-    merger.append("temp/page" + str(i) + ".pdf")
+buffer = io.BytesIO()
+imgs = []
 
-merger.write("cards.pdf")
-merger.close()
+for i in range(len(pages)):
+    pngs = [imagegen.gen_png(card, 0) for card in pages[i]]
+    img = Image.open(io.BytesIO(resvg_py.svg_to_bytes(st.fromfile("pdf-background.svg").to_str().decode())))
+
+    for col in range(page_size):
+        for row in range(page_size):
+            i = row * 3 + col
+            if i >= len(pngs):
+                break
+            img.paste(
+                Image.open(io.BytesIO(pngs[i])),
+                (int(img.width / 3 * col), int(img.height / 3 * row))
+            )
+
+    imgs.append(img)
+
+imgs[0].save(buffer, format="PDF", save_all=True, append_images=imgs[1:])
+with open("cards.pdf", "wb") as f:
+    f.write(buffer.getvalue())

@@ -6,15 +6,15 @@ import json
 
 def get_all_cards():
     deck = []
-    for i in range(3 ** conf.dim):
-        card = [int(i // (3 ** j)) % 3 for j in range(conf.dim)]
+    for i in range(conf.base ** conf.dim):
+        card = [int(i // (conf.base ** j)) % conf.base for j in range(conf.dim)]
         deck.append(np.array(card))
     return deck
 
 def create_deck():
     deck = []
-    for i in random.sample(range(3 ** conf.dim), conf.deck_size):
-        card = [int(i // (3 ** j)) % 3 for j in range(conf.dim)]
+    for i in random.sample(range(conf.base ** conf.dim), conf.deck_size):
+        card = [int(i // (conf.base ** j)) % conf.base for j in range(conf.dim)]
         deck.append(np.array(card))
     return deck
 

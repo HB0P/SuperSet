@@ -1,13 +1,16 @@
 import svgutils.transform as st
+import resvg_py
 import config as conf
 
 def hex_string(x):
     return hex(x)[2:].rjust(6, '0')
 
-template_dir = "card-templates/"
+blank_file = "card-templates/blank.svg"
+template_dir_3 = "card-templates/base_3/"
+template_dir_4 = "card-templates/base_4/"
 
-# the 3 colors of cards and borders
-colors = [0xff0000, 0x00a000, 0x0000ff, 0x000000] # the 4th element is the default color
+# the colors of shapes and borders
+colors = [0xff0000, 0x00a000, 0x0000ff, 0xa000ff, 0x000000] # the last element is the default color
 border_colors = [0x00e0ff, 0xff00ff, 0xffa000]
 background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 
@@ -15,8 +18,8 @@ background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 whiteness = [1, 128/255, 0]
 
 # generate svg for a given set of properties
-def gen_svg_frame(values):
-    svg = st.fromfile(template_dir + "blank.svg")
+def gen_svg_frame_base3(values):
+    svg = st.fromfile(blank_file)
 
     color = values[0]
     shape = values[1]
@@ -29,7 +32,7 @@ def gen_svg_frame(values):
 
     # background color
     if background_color is not None:
-        svg.append(st.fromstring(st.fromfile(template_dir + "background.svg").to_str().decode().replace(
+        svg.append(st.fromstring(st.fromfile(template_dir_3 + "background.svg").to_str().decode().replace(
             "fill:#ffffff",
             "fill:#" + hex_string(background_colors[background_color])
         )))
@@ -49,7 +52,7 @@ def gen_svg_frame(values):
         svg.append(
             st.fromstring(
                 st.fromfile(
-                    template_dir + "base" + str(number) + str(shape) + ".svg"
+                    template_dir_3 + "base" + str(number) + str(shape) + ".svg"
                 ).to_str().decode().replace(
                     "stroke:#000000",
                     "stroke:#" + hex_string(colors[color])
@@ -75,7 +78,7 @@ def gen_svg_frame(values):
         svg.append(
             st.fromstring(
                 st.fromfile(
-                    template_dir + "border" + str(border_number) + str(border_style) + ".svg"
+                    template_dir_3 + "border" + str(border_number) + str(border_style) + ".svg"
                 ).to_str().decode().replace(
                     "stroke:#ff00ff",
                     "stroke:#" + hex_string(hex_code)
@@ -85,10 +88,53 @@ def gen_svg_frame(values):
 
     return svg
 
+def gen_svg_frame_base4(values):
+    svg = st.fromfile(blank_file)
+
+    color = values[0]
+    shape = values[1]
+    number = values[2]
+    pattern = values[3]
+
+    if number is None:
+        number = 0
+    if shape is None:
+        shape = 2
+    if color is None:
+        color = -1
+
+    if pattern == 0:
+        fill_string = "#ffffff"
+    elif pattern == 1:
+        fill_string = "url(#pattern_stripes)"
+    elif pattern == 2:
+        fill_string = "url(#pattern_spots)"
+    else:
+        fill_string = "#" + hex_string(colors[color])
+
+    svg.append(
+        st.fromstring(
+            st.fromfile(
+                template_dir_4 + "test_" + str(number+1) + ".svg"
+            ).to_str().decode().replace(
+                "stroke:#000000",
+                "stroke:#" + hex_string(colors[color])
+            ).replace(
+                "fill:#808080",
+                "fill:" + fill_string
+            ).replace(
+                "fill:#000000",
+                "fill:#" + hex_string(colors[color])
+            )
+        )
+    )
+
+    return svg
+
 # generate svg for a card at a given frame in time
 def gen_svg(card, frame):
     if card is None:
-        return st.fromfile(template_dir + "blank.svg")
+        return st.fromfile(blank_file)
 
     values = [None] * len(conf.enabled_dimensions)
     j = 0
@@ -99,4 +145,13 @@ def gen_svg(card, frame):
         values[i] = card[j + (frame % n)]
         j += n
 
-    return gen_svg_frame(values)
+    if conf.base == 3:
+        return gen_svg_frame_base3(values)
+    elif conf.base == 4:
+        return gen_svg_frame_base4(values)
+    return st.fromfile(blank_file)
+
+# generate png for a card at a given frame in time
+def gen_png(card, frame):
+    svg = gen_svg(card, frame)
+    return resvg_py.svg_to_bytes(svg.to_str().decode())

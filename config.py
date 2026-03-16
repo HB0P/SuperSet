@@ -3,21 +3,24 @@
 # 1 is enabled normally
 # >1 cycles between dimensions
 enabled_dimensions = [
-    0, # shape color
+    1, # shape color
     0, # shape
-    0, # number of shapes
-    0, # shading
-    1, # border style
-    1, # border color
-    1, # number of borders
-    1, # background shading
+    1, # number of shapes
+    1, # shading / pattern
+    0, # border style
+    0, # border color
+    0, # number of borders
+    0, # background shading
 ]
 
 # dimension of the game
 dim = sum(enabled_dimensions)
 
+# base of the game
+base = 4
+
 # number of cards in the deck
-deck_size = 3 ** dim
+deck_size = base ** dim
 
 # number of cards displayed at a time
 num_cards = dim + 2
