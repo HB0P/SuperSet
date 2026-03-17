@@ -10,7 +10,8 @@ template_dir_3 = "card-templates/base_3/"
 template_dir_4 = "card-templates/base_4/"
 
 # the colors of shapes and borders
-colors = [0xff0000, 0x00a000, 0x0000ff, 0xa000ff, 0x000000] # the last element is the default color
+colors_3 = [0xff0000, 0x00a000, 0x0000ff, 0x000000] # the last element is the default color
+colors_4 = [0xeb0c0c, 0x79de14, 0x27d6d6, 0x8000ff, 0x000000]
 border_colors = [0x00e0ff, 0xff00ff, 0xffa000]
 background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 
@@ -47,7 +48,7 @@ def gen_svg_frame_base3(values):
             color = -1
         if shading is None:
             shading = 2
-        shade_color = int(colors[color] * (1 - whiteness[shading]) + 0xffffff * whiteness[shading])
+        shade_color = int(colors_3[color] * (1 - whiteness[shading]) + 0xffffff * whiteness[shading])
         fill_opacity = 0 if shade_color == 0xffffff else 1
         svg.append(
             st.fromstring(
@@ -55,7 +56,7 @@ def gen_svg_frame_base3(values):
                     template_dir_3 + "base" + str(number) + str(shape) + ".svg"
                 ).to_str().decode().replace(
                     "stroke:#000000",
-                    "stroke:#" + hex_string(colors[color])
+                    "stroke:#" + hex_string(colors_3[color])
                 ).replace(
                     "fill:#808080;fill-opacity:1",
                     "fill:#" + hex_string(shade_color) + ";fill-opacity:" + str(fill_opacity)
@@ -72,7 +73,7 @@ def gen_svg_frame_base3(values):
         if color is None:
             color = -1
         if border_color is None:
-            hex_code = colors[color]
+            hex_code = colors_3[color]
         else:
             hex_code = border_colors[border_color]
         svg.append(
@@ -89,8 +90,6 @@ def gen_svg_frame_base3(values):
     return svg
 
 def gen_svg_frame_base4(values):
-    svg = st.fromfile(blank_file)
-
     color = values[0]
     shape = values[1]
     number = values[2]
@@ -99,37 +98,19 @@ def gen_svg_frame_base4(values):
     if number is None:
         number = 0
     if shape is None:
-        shape = 2
+        shape = 0
     if color is None:
         color = -1
+    if pattern is None:
+        pattern = 3
 
-    if pattern == 0:
-        fill_string = "#ffffff"
-    elif pattern == 1:
-        fill_string = "url(#pattern_stripes)"
-    elif pattern == 2:
-        fill_string = "url(#pattern_spots)"
-    else:
-        fill_string = "#" + hex_string(colors[color])
-
-    svg.append(
-        st.fromstring(
-            st.fromfile(
-                template_dir_4 + "test_" + str(number+1) + ".svg"
-            ).to_str().decode().replace(
-                "stroke:#000000",
-                "stroke:#" + hex_string(colors[color])
-            ).replace(
-                "fill:#808080",
-                "fill:" + fill_string
-            ).replace(
-                "fill:#000000",
-                "fill:#" + hex_string(colors[color])
-            )
+    with open(template_dir_4 + str(pattern) + "/" + str(number) + str(shape) + ".svg") as f:
+        svg_str = f.read().replace(
+            "#000000",
+            "#" + hex_string(colors_4[color])
         )
-    )
 
-    return svg
+    return st.fromstring(svg_str)
 
 # generate svg for a card at a given frame in time
 def gen_svg(card, frame):

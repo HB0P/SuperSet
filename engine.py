@@ -3,6 +3,7 @@ import numpy as np
 from sympy.utilities.iterables import multiset_permutations
 import config as conf
 
+# get all subsets of length n from cards
 def inclusion(cards, n):
     consider=[]
     for x in range(math.comb(len(cards), n)):
@@ -16,6 +17,7 @@ def inclusion(cards, n):
                 consider[x].append(cards[y])
     return consider
 
+# get all permutations of x +s and (n-x) -s
 def sign(n, x):
     signs = [1]*x + [-1]*(n - x)
     signs = list(multiset_permutations(signs))
@@ -27,7 +29,7 @@ def subset(n, signs, consider):
         for s in range(len(signs)):
             attempt = np.array([0] * conf.dim)
             for x in range(n):
-                    attempt = (attempt + (signs[s][x] * consider[y][x])) % 3
+                attempt = (attempt + (signs[s][x] * consider[y][x])) % 3
             if (attempt == 0).all():
                 twin_sets.append(list(consider[y]))
                 break

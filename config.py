@@ -4,7 +4,7 @@
 # >1 cycles between dimensions
 enabled_dimensions = [
     1, # shape color
-    0, # shape
+    1, # shape
     1, # number of shapes
     1, # shading / pattern
     0, # border style
