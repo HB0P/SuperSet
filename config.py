@@ -32,4 +32,4 @@ num_players = 1
 
 # whether twin sets should be found automatically
 # removes valid set checking if disabled
-do_find_twin_sets = False
+do_find_twin_sets = True

@@ -23,7 +23,7 @@ def sign(n, x):
     signs = list(multiset_permutations(signs))
     return signs
 
-def subset(n, signs, consider):
+def subset_base_3(n, signs, consider):
     twin_sets = []
     for y in range(len(consider)):
         for s in range(len(signs)):
@@ -35,11 +35,39 @@ def subset(n, signs, consider):
                 break
     return twin_sets
 
-def find_twin_sets(cards):
+def subset_base_4(n, consider):
+    twin_sets = []
+    for y in range(len(consider)):
+        attempt = np.array([1] * conf.dim)
+        for x in range(n):
+            attempt = (attempt * ((2*consider[y][x])+1)) % 8
+        if (attempt == 1).all():
+            twin_sets.append(list(consider[y]))
+            break
+    return twin_sets
+
+def find_twin_sets_base_3(cards):
     twin_sets = []
     for n in range(len(cards) + 1):
         consider = np.array(inclusion(cards, n))
         for x in range((-n) % 3, math.floor(n / 2) + 1, 3):
             signs = np.array(sign(n, x))
-            twin_sets.extend(subset(n, signs, consider))
+            twin_sets.extend(subset_base_3(n, signs, consider))
     return twin_sets
+
+def find_twin_sets_base_4(cards):
+    print("cards:", cards)
+    twin_sets = []
+    for n in range(4,len(cards) + 1):
+        consider = np.array(inclusion(cards, n))
+        twin_sets.extend(subset_base_4(n, consider))
+    print("twin sets:", twin_sets)
+    return twin_sets
+
+def find_twin_sets(cards):
+    if conf.base == 3:
+        return find_twin_sets_base_3(cards)
+    elif conf.base == 4:
+        return find_twin_sets_base_4(cards)
+    else:
+        return None

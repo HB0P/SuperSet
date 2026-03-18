@@ -151,13 +151,11 @@ def gen_png(card, frame):
         if frame in cache[card_id]:
             return cache[card_id][frame]
         else:
-            print("generating new")
             svg = gen_svg(card, frame)
             png = resvg_py.svg_to_bytes(svg.to_str().decode())
             cache[card_id][frame] = png
             return png
     else:
-        print("generating new")
         svg = gen_svg(card, frame)
         png = resvg_py.svg_to_bytes(svg.to_str().decode())
         cache[card_id] = {frame: png}

@@ -81,7 +81,6 @@ def click_card(i):
     refresh_button(i)
 
 def submit(player):
-    print("submit", player)
     submit_buttons[player]["background"] = "chartreuse3"
     def reset_color(plr):
         if game_active:
