@@ -1,3 +1,5 @@
+import math
+
 import svgutils.transform as st
 import resvg_py
 import config as conf
@@ -17,6 +19,12 @@ background_colors = [0xffffff, 0xa0a0a0, 0x404040]
 
 # whiteness to be applied for shaded cards
 whiteness = [1, 128/255, 0]
+
+# cache previously generated pngs
+cache = {}
+
+# the number of frames after which all cards will be back to their original state
+full_cycle_frames = math.lcm(*[i for i in conf.enabled_dimensions if i != 0])
 
 # generate svg for a given set of properties
 def gen_svg_frame_base3(values):
@@ -134,5 +142,23 @@ def gen_svg(card, frame):
 
 # generate png for a card at a given frame in time
 def gen_png(card, frame):
-    svg = gen_svg(card, frame)
-    return resvg_py.svg_to_bytes(svg.to_str().decode())
+    frame = frame % full_cycle_frames
+    card_id = 0
+    for i in range(len(card)):
+        card_id += card[i] * (conf.base ** i)
+
+    if card_id in cache:
+        if frame in cache[card_id]:
+            return cache[card_id][frame]
+        else:
+            print("generating new")
+            svg = gen_svg(card, frame)
+            png = resvg_py.svg_to_bytes(svg.to_str().decode())
+            cache[card_id][frame] = png
+            return png
+    else:
+        print("generating new")
+        svg = gen_svg(card, frame)
+        png = resvg_py.svg_to_bytes(svg.to_str().decode())
+        cache[card_id] = {frame: png}
+        return png

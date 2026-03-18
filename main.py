@@ -1,13 +1,13 @@
 import tkinter as tk
-import tksvg
-from tksvg import SvgImage
 from datetime import datetime as dt
-import config
-import imagegen
-import engine
-import utils
-import config as conf
 from functools import partial
+
+import config
+import config as conf
+import engine
+import imagegen
+import utils
+
 # import vlc
 
 ### game state
@@ -20,7 +20,7 @@ start_time = dt.now()
 game_active = True
 
 ### gui state
-imgs: list[SvgImage] = [None] * conf.num_cards
+imgs: list[tk.PhotoImage] = [None] * conf.num_cards
 buttons: list[tk.Button] = [None] * conf.num_cards
 submit_buttons: list[tk.Button] = [None] * conf.num_players
 score_labels: list[tk.Label] = [None] * conf.num_players
@@ -51,8 +51,8 @@ def is_twin_set_selected():
 ### gui functions
 def refresh_button(i):
     frame = int((dt.now() - start_time).total_seconds())
-    svg = imagegen.gen_svg(cards[i], frame).to_str().decode()
-    img = tksvg.SvgImage(data=svg).subsample(2)
+    png = imagegen.gen_png(cards[i], frame)
+    img = tk.PhotoImage(data=png).subsample(2)
     imgs[i] = img
     buttons[i]["image"] = imgs[i]
 
