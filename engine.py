@@ -43,7 +43,6 @@ def subset_base_4(n, consider):
             attempt = (attempt * ((2*consider[y][x])+1)) % 8
         if (attempt == 1).all():
             twin_sets.append(list(consider[y]))
-            break
     return twin_sets
 
 def find_twin_sets_base_3(cards):
@@ -56,12 +55,10 @@ def find_twin_sets_base_3(cards):
     return twin_sets
 
 def find_twin_sets_base_4(cards):
-    print("cards:", cards)
     twin_sets = []
-    for n in range(4,len(cards) + 1):
+    for n in range(0, len(cards) + 1, 2):
         consider = np.array(inclusion(cards, n))
         twin_sets.extend(subset_base_4(n, consider))
-    print("twin sets:", twin_sets)
     return twin_sets
 
 def find_twin_sets(cards):
