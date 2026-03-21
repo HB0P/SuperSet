@@ -122,9 +122,6 @@ def gen_svg_frame_base4(values):
 
 # generate svg for a card at a given frame in time
 def gen_svg(card, frame):
-    if card is None:
-        return st.fromfile(blank_file)
-
     values = [None] * len(conf.enabled_dimensions)
     j = 0
     for i in range(len(values)):
@@ -142,6 +139,11 @@ def gen_svg(card, frame):
 
 # generate png for a card at a given frame in time
 def gen_png(card, frame):
+    if card is None:
+        svg = st.fromfile(blank_file)
+        png = resvg_py.svg_to_bytes(svg.to_str().decode())
+        return png
+
     frame = frame % full_cycle_frames
     card_id = 0
     for i in range(len(card)):
