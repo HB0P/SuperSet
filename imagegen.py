@@ -3,11 +3,15 @@ import math
 import svgutils.transform as st
 import resvg_py
 import config as conf
+import pypdn
+from PIL import Image
+import io
 
 def hex_string(x):
     return hex(x)[2:].rjust(6, '0')
 
 blank_file = "card-templates/blank.svg"
+template_file_2 = "card-templates/base_2.pdn"
 template_dir_3 = "card-templates/base_3/"
 template_dir_4 = "card-templates/base_4/"
 
@@ -26,8 +30,23 @@ cache = {}
 # the number of frames after which all cards will be back to their original state
 full_cycle_frames = math.lcm(*[i for i in conf.enabled_dimensions if i != 0])
 
+def gen_frame_base2(values):
+    img = pypdn.read(template_file_2)
+
+    for i in range(1, len(img.layers)):
+        img.layers[i].visible = False
+
+    for i in range(len(values)):
+        if values[i] is not None:
+            img.layers[1 + (i * 2) + values[i]].visible = True
+
+    img = Image.fromarray(img.flatten(asByte=True))
+    buffer = io.BytesIO()
+    img.save(buffer, format="png")
+    return buffer.getvalue()
+
 # generate svg for a given set of properties
-def gen_svg_frame_base3(values):
+def gen_frame_base3(values):
     svg = st.fromfile(blank_file)
 
     color = values[0]
@@ -97,7 +116,7 @@ def gen_svg_frame_base3(values):
 
     return svg
 
-def gen_svg_frame_base4(values):
+def gen_frame_base4(values):
     color = values[0]
     shape = values[1]
     number = values[2]
@@ -120,8 +139,16 @@ def gen_svg_frame_base4(values):
 
     return st.fromstring(svg_str)
 
-# generate svg for a card at a given frame in time
-def gen_svg(card, frame):
+gen_frame_functions = [
+    None,
+    None,
+    gen_frame_base2,
+    gen_frame_base3,
+    gen_frame_base4
+]
+
+# generate svg or png for a card at a given frame in time
+def generate(card, frame):
     values = [None] * len(conf.enabled_dimensions)
     j = 0
     for i in range(len(values)):
@@ -131,14 +158,26 @@ def gen_svg(card, frame):
         values[i] = card[j + (frame % n)]
         j += n
 
-    if conf.base == 3:
-        return gen_svg_frame_base3(values)
-    elif conf.base == 4:
-        return gen_svg_frame_base4(values)
-    return st.fromfile(blank_file)
+    if conf.base >= len(gen_frame_functions):
+        return st.fromfile(blank_file)
+    gen_frame = gen_frame_functions[conf.base]
+    if gen_frame is None:
+        return st.fromfile(blank_file)
+    return gen_frame(values)
 
 # generate png for a card at a given frame in time
-def gen_png(card, frame):
+def generate_png(card, frame):
+    image = generate(card, frame)
+    if type(image) is st.SVGFigure:
+        return resvg_py.svg_to_bytes(image.to_str().decode())
+    elif type(image) is bytes:
+        return image
+    else:
+        return None
+
+# get png for a card at a given frame in time
+# either returns stored value from cache or generates it
+def get_png(card, frame):
     if card is None:
         svg = st.fromfile(blank_file)
         png = resvg_py.svg_to_bytes(svg.to_str().decode())
@@ -153,12 +192,10 @@ def gen_png(card, frame):
         if frame in cache[card_id]:
             return cache[card_id][frame]
         else:
-            svg = gen_svg(card, frame)
-            png = resvg_py.svg_to_bytes(svg.to_str().decode())
+            png = generate_png(card, frame)
             cache[card_id][frame] = png
             return png
     else:
-        svg = gen_svg(card, frame)
-        png = resvg_py.svg_to_bytes(svg.to_str().decode())
+        png = generate_png(card, frame)
         cache[card_id] = {frame: png}
         return png

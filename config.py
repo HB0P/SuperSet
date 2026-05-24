@@ -6,9 +6,9 @@ enabled_dimensions = [
     1, # shape color
     1, # shape
     1, # number of shapes
-    0, # shading / pattern
-    0, # border style
-    0, # border color
+    1, # shading / pattern
+    1, # border style
+    1, # border color
     0, # number of borders
     0, # background shading
 ]
@@ -17,13 +17,19 @@ enabled_dimensions = [
 dim = sum(enabled_dimensions)
 
 # base of the game
-base = 4
+base = 2
 
 # number of cards in the deck
 deck_size = base ** dim
 
 # number of cards displayed at a time
-num_cards = (base - 2) * dim + 2
+num_cards = [
+    0,
+    0,
+    2 ** (dim - 1) + 1,
+    dim + 2,
+    2 * dim + 2
+][base]
 
 # num cols, num rows
 grid_size = ((num_cards + 1) // 2, 2)
@@ -32,4 +38,4 @@ num_players = 1
 
 # whether twin sets should be found automatically
 # removes valid set checking if disabled
-do_find_twin_sets = True
+do_find_twin_sets = False

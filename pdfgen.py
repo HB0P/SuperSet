@@ -26,7 +26,7 @@ def gen_pdf_from_pngs():
     imgs = []
 
     for i in range(len(pages)):
-        pngs = [imagegen.gen_png(card, 0) for card in pages[i]]
+        pngs = [imagegen.get_png(card, 0) for card in pages[i]]
         img = Image.open(io.BytesIO(resvg_py.svg_to_bytes(st.fromfile("pdf-background.svg").to_str().decode())))
 
         for col in range(page_size):
@@ -52,7 +52,7 @@ def gen_pdf_from_svgs():
 
     merger = PdfMerger()
     for i in range(len(pages)):
-        svgs = [sc.Element(imagegen.gen_svg(card, 0).getroot().root) for card in pages[i]]
+        svgs = [sc.Element(imagegen.generate(card, 0).getroot().root) for card in pages[i]]
 
         grid_fig = sc.Figure(297.5 * 3, 421 * 3, *svgs)
         grid_fig.tile(page_size, page_size)
@@ -84,7 +84,7 @@ def gen_pdf_new():
     pages_html = ""
 
     for card in cards:
-        svg = imagegen.gen_svg(card, 0)
+        svg = imagegen.generate(card, 0)
         svg_str = svg.to_str().decode()
 
         pages_html += f"""
